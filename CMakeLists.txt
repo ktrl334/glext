@@ -1,29 +1,29 @@
 cmake_minimum_required(VERSION 3.30)
-project(glad LANGUAGES C)
+project(glo LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED true)
 set(CMAKE_C_EXTENSIONS false)
 
-set(GLAD_SOURCE source/gl.c source/egl.c)
+set(GLO_SOURCE source/gl.c source/egl.c)
 
-add_library(glad)
-target_include_directories(glad PUBLIC include/)
+add_library(glo)
+target_include_directories(glo PUBLIC include/)
 
 find_package(X11 QUIET)
 
 if(X11_FOUND)
-    list(APPEND GLAD_SOURCE source/glx.c)
-    set_target_properties(glad PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    target_link_libraries(glad PUBLIC X11 GL)
+    list(APPEND GLO_SOURCE source/glx.c)
+    set_target_properties(glo PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    target_link_libraries(glo PUBLIC X11 GL)
 elseif(WIN32)
-    list(APPEND GLAD_SOURCE source/wgl.c)
-    target_link_libraries(glad PUBLIC opengl32)
+    list(APPEND GLO_SOURCE source/wgl.c)
+    target_link_libraries(glo PUBLIC opengl32)
 else()
     message(FATAL_ERROR)
 endif()
 
 
-target_sources(glad PRIVATE ${GLAD_SOURCE})
+target_sources(glo PRIVATE ${GLO_SOURCE})
 
-target_compile_definitions(glad PRIVATE GLAD_API_CALL_EXPORT_BUILD PUBLIC GLAD_API_CALL_EXPORT)
+target_compile_definitions(glo PRIVATE GLO_API_CALL_EXPORT_BUILD PUBLIC GLO_API_CALL_EXPORT)
