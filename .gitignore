@@ -1,11 +1,9 @@
-*
+/*
 
 # Don't ignore
 
 ## Files
 
-!*.c
-!*.txt
 !/.gitignore
 !/CMakeLists.txt
 !/license.txt
@@ -13,5 +11,5 @@
 
 ## Directories
 
-!/source
-!/include
+!/source/
+!/include/
