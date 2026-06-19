@@ -2,14 +2,13 @@
 #define GLAD_GLX_H_
 
 #if !__has_include(<X11/Xlib.h>)
-  #error "Xlib.h wasn't found."
+#error "Xlib.h wasn't found."
 #else
 
 #ifdef GLX_H
-  #error GLX header already included (API: glx), remove previous include!
+#error GLX header already included (API: glx), remove previous include!
 #endif
 #define GLX_H 1
-
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -28,92 +27,94 @@ extern "C" {
 #define GLAD_PLATFORM_H_
 
 #ifndef GLAD_PLATFORM_WIN32
-  #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(__MINGW32__)
-    #define GLAD_PLATFORM_WIN32 1
-  #else
-    #define GLAD_PLATFORM_WIN32 0
-  #endif
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)                   \
+  || defined(__MINGW32__)
+#define GLAD_PLATFORM_WIN32 1
+#else
+#define GLAD_PLATFORM_WIN32 0
+#endif
 #endif
 
 #ifndef GLAD_PLATFORM_APPLE
-  #ifdef __APPLE__
-    #define GLAD_PLATFORM_APPLE 1
-  #else
-    #define GLAD_PLATFORM_APPLE 0
-  #endif
+#ifdef __APPLE__
+#define GLAD_PLATFORM_APPLE 1
+#else
+#define GLAD_PLATFORM_APPLE 0
+#endif
 #endif
 
 #ifndef GLAD_PLATFORM_EMSCRIPTEN
-  #ifdef __EMSCRIPTEN__
-    #define GLAD_PLATFORM_EMSCRIPTEN 1
-  #else
-    #define GLAD_PLATFORM_EMSCRIPTEN 0
-  #endif
+#ifdef __EMSCRIPTEN__
+#define GLAD_PLATFORM_EMSCRIPTEN 1
+#else
+#define GLAD_PLATFORM_EMSCRIPTEN 0
+#endif
 #endif
 
 #ifndef GLAD_PLATFORM_UWP
-  #if defined(_MSC_VER) && !defined(GLAD_INTERNAL_HAVE_WINAPIFAMILY)
-    #ifdef __has_include
-      #if __has_include(<winapifamily.h>)
-        #define GLAD_INTERNAL_HAVE_WINAPIFAMILY 1
-      #endif
-    #elif _MSC_VER >= 1700 && !_USING_V110_SDK71_
-      #define GLAD_INTERNAL_HAVE_WINAPIFAMILY 1
-    #endif
-  #endif
+#if defined(_MSC_VER) && !defined(GLAD_INTERNAL_HAVE_WINAPIFAMILY)
+#ifdef __has_include
+#if __has_include(<winapifamily.h>)
+#define GLAD_INTERNAL_HAVE_WINAPIFAMILY 1
+#endif
+#elif _MSC_VER >= 1700 && !_USING_V110_SDK71_
+#define GLAD_INTERNAL_HAVE_WINAPIFAMILY 1
+#endif
+#endif
 
-  #ifdef GLAD_INTERNAL_HAVE_WINAPIFAMILY
-    #include <winapifamily.h>
-    #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
-      #define GLAD_PLATFORM_UWP 1
-    #endif
-  #endif
+#ifdef GLAD_INTERNAL_HAVE_WINAPIFAMILY
+#include <winapifamily.h>
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)                        \
+  && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#define GLAD_PLATFORM_UWP 1
+#endif
+#endif
 
-  #ifndef GLAD_PLATFORM_UWP
-    #define GLAD_PLATFORM_UWP 0
-  #endif
+#ifndef GLAD_PLATFORM_UWP
+#define GLAD_PLATFORM_UWP 0
+#endif
 #endif
 
 #ifdef __GNUC__
-  #define GLAD_GNUC_EXTENSION __extension__
+#define GLAD_GNUC_EXTENSION __extension__
 #else
-  #define GLAD_GNUC_EXTENSION
+#define GLAD_GNUC_EXTENSION
 #endif
 
 #define GLAD_UNUSED(x) (void)(x)
 
 #ifndef GLAD_API_CALL
-  #if defined(GLAD_API_CALL_EXPORT)
-    #if GLAD_PLATFORM_WIN32 || defined(__CYGWIN__)
-      #if defined(GLAD_API_CALL_EXPORT_BUILD)
-        #if defined(__GNUC__)
-          #define GLAD_API_CALL __attribute__ ((dllexport)) extern
-        #else
-          #define GLAD_API_CALL __declspec(dllexport) extern
-        #endif
-      #else
-        #if defined(__GNUC__)
-          #define GLAD_API_CALL __attribute__ ((dllimport)) extern
-        #else
-          #define GLAD_API_CALL __declspec(dllimport) extern
-        #endif
-      #endif
-    #elif defined(__GNUC__) && defined(GLAD_API_CALL_EXPORT_BUILD)
-      #define GLAD_API_CALL __attribute__ ((visibility ("default"))) extern
-    #else
-      #define GLAD_API_CALL extern
-    #endif
-  #else
-    #define GLAD_API_CALL extern
-  #endif
+#if defined(GLAD_API_CALL_EXPORT)
+#if GLAD_PLATFORM_WIN32 || defined(__CYGWIN__)
+#if defined(GLAD_API_CALL_EXPORT_BUILD)
+#if defined(__GNUC__)
+#define GLAD_API_CALL __attribute__ ((dllexport)) extern
+#else
+#define GLAD_API_CALL __declspec (dllexport) extern
+#endif
+#else
+#if defined(__GNUC__)
+#define GLAD_API_CALL __attribute__ ((dllimport)) extern
+#else
+#define GLAD_API_CALL __declspec (dllimport) extern
+#endif
+#endif
+#elif defined(__GNUC__) && defined(GLAD_API_CALL_EXPORT_BUILD)
+#define GLAD_API_CALL __attribute__ ((visibility ("default"))) extern
+#else
+#define GLAD_API_CALL extern
+#endif
+#else
+#define GLAD_API_CALL extern
+#endif
 #endif
 
 #ifdef APIENTRY
-  #define GLAD_API_PTR APIENTRY
+#define GLAD_API_PTR APIENTRY
 #elif GLAD_PLATFORM_WIN32
-  #define GLAD_API_PTR __stdcall
+#define GLAD_API_PTR __stdcall
 #else
-  #define GLAD_API_PTR
+#define GLAD_API_PTR
 #endif
 
 #ifndef GLAPI
@@ -130,13 +131,15 @@ extern "C" {
 
 #define GLAD_GENERATOR_VERSION "2.0.8"
 
-typedef void (*GLADapiproc)(void);
+typedef void (*GLADapiproc) (void);
 
-typedef GLADapiproc (*GLADloadfunc)(const char *name);
-typedef GLADapiproc (*GLADuserptrloadfunc)(void *userptr, const char *name);
+typedef GLADapiproc (*GLADloadfunc) (const char* name);
+typedef GLADapiproc (*GLADuserptrloadfunc) (void* userptr, const char* name);
 
-typedef void (*GLADprecallback)(const char *name, GLADapiproc apiproc, int len_args, ...);
-typedef void (*GLADpostcallback)(void *ret, const char *name, GLADapiproc apiproc, int len_args, ...);
+typedef void (*GLADprecallback) (const char* name, GLADapiproc apiproc,
+                                 int len_args, ...);
+typedef void (*GLADpostcallback) (void* ret, const char* name,
+                                  GLADapiproc apiproc, int len_args, ...);
 
 #endif /* GLAD_PLATFORM_H_ */
 
@@ -434,7 +437,6 @@ typedef void (*GLADpostcallback)(void *ret, const char *name, GLADapiproc apipro
 #define GLX_Y_INVERTED_EXT 0x20D4
 #define __GLX_NUMBER_EVENTS 17
 
-
 #ifndef GLEXT_64_TYPES_DEFINED
 /* This code block is duplicated in glext.h, so must be protected */
 #define GLEXT_64_TYPES_DEFINED
@@ -453,7 +455,7 @@ typedef long long int int64_t;
 typedef unsigned long long int uint64_t;
 #endif /* __arch64__ */
 #endif /* __STDC__ */
-#elif defined( __VMS ) || defined(__sgi)
+#elif defined(__VMS) || defined(__sgi)
 #include <inttypes.h>
 #elif defined(__SCO__) || defined(__USLC__)
 #include <stdint.h>
@@ -473,127 +475,107 @@ typedef unsigned __int64 uint64_t;
 #endif
 #endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
+#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)                    \
+  && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
 
 #else
 
 #endif
 
-#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
+#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)                    \
+  && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
 
 #else
 
 #endif
-
-
-
-
-
-
 
 typedef XID GLXFBConfigID;
-typedef struct __GLXFBConfigRec *GLXFBConfig;
+typedef struct __GLXFBConfigRec* GLXFBConfig;
 typedef XID GLXContextID;
-typedef struct __GLXcontextRec *GLXContext;
+typedef struct __GLXcontextRec* GLXContext;
 typedef XID GLXPixmap;
 typedef XID GLXDrawable;
 typedef XID GLXWindow;
 typedef XID GLXPbuffer;
-typedef void (GLAD_API_PTR *__GLXextFuncPtr)(void);
+typedef void (GLAD_API_PTR* __GLXextFuncPtr) (void);
 typedef XID GLXVideoCaptureDeviceNV;
 typedef unsigned int GLXVideoDeviceNV;
 typedef XID GLXVideoSourceSGIX;
 typedef XID GLXFBConfigIDSGIX;
-typedef struct __GLXFBConfigRec *GLXFBConfigSGIX;
+typedef struct __GLXFBConfigRec* GLXFBConfigSGIX;
 typedef XID GLXPbufferSGIX;
 typedef struct {
-    int event_type;             /* GLX_DAMAGED or GLX_SAVED */
-    int draw_type;              /* GLX_WINDOW or GLX_PBUFFER */
-    unsigned long serial;       /* # of last request processed by server */
-    Bool send_event;            /* true if this came for SendEvent request */
-    Display *display;           /* display the event was read from */
-    GLXDrawable drawable;       /* XID of Drawable */
-    unsigned int buffer_mask;   /* mask indicating which buffers are affected */
-    unsigned int aux_buffer;    /* which aux buffer was affected */
-    int x, y;
-    int width, height;
-    int count;                  /* if nonzero, at least this many more */
+  int event_type;           /* GLX_DAMAGED or GLX_SAVED */
+  int draw_type;            /* GLX_WINDOW or GLX_PBUFFER */
+  unsigned long serial;     /* # of last request processed by server */
+  Bool send_event;          /* true if this came for SendEvent request */
+  Display* display;         /* display the event was read from */
+  GLXDrawable drawable;     /* XID of Drawable */
+  unsigned int buffer_mask; /* mask indicating which buffers are affected */
+  unsigned int aux_buffer;  /* which aux buffer was affected */
+  int x, y;
+  int width, height;
+  int count; /* if nonzero, at least this many more */
 } GLXPbufferClobberEvent;
 typedef struct {
-    int type;
-    unsigned long serial;       /* # of last request processed by server */
-    Bool send_event;            /* true if this came from a SendEvent request */
-    Display *display;           /* Display the event was read from */
-    GLXDrawable drawable;       /* drawable on which event was requested in event mask */
-    int event_type;
-    int64_t ust;
-    int64_t msc;
-    int64_t sbc;
+  int type;
+  unsigned long serial; /* # of last request processed by server */
+  Bool send_event;      /* true if this came from a SendEvent request */
+  Display* display;     /* Display the event was read from */
+  GLXDrawable
+    drawable; /* drawable on which event was requested in event mask */
+  int event_type;
+  int64_t ust;
+  int64_t msc;
+  int64_t sbc;
 } GLXBufferSwapComplete;
 typedef union __GLXEvent {
-    GLXPbufferClobberEvent glxpbufferclobber;
-    GLXBufferSwapComplete glxbufferswapcomplete;
-    long pad[24];
+  GLXPbufferClobberEvent glxpbufferclobber;
+  GLXBufferSwapComplete glxbufferswapcomplete;
+  long pad[24];
 } GLXEvent;
 typedef struct {
-    int type;
-    unsigned long serial;
-    Bool send_event;
-    Display *display;
-    int extension;
-    int evtype;
-    GLXDrawable window;
-    Bool stereo_tree;
+  int type;
+  unsigned long serial;
+  Bool send_event;
+  Display* display;
+  int extension;
+  int evtype;
+  GLXDrawable window;
+  Bool stereo_tree;
 } GLXStereoNotifyEventEXT;
 typedef struct {
-    int type;
-    unsigned long serial;   /* # of last request processed by server */
-    Bool send_event;        /* true if this came for SendEvent request */
-    Display *display;       /* display the event was read from */
-    GLXDrawable drawable;   /* i.d. of Drawable */
-    int event_type;         /* GLX_DAMAGED_SGIX or GLX_SAVED_SGIX */
-    int draw_type;          /* GLX_WINDOW_SGIX or GLX_PBUFFER_SGIX */
-    unsigned int mask;      /* mask indicating which buffers are affected*/
-    int x, y;
-    int width, height;
-    int count;              /* if nonzero, at least this many more */
+  int type;
+  unsigned long serial; /* # of last request processed by server */
+  Bool send_event;      /* true if this came for SendEvent request */
+  Display* display;     /* display the event was read from */
+  GLXDrawable drawable; /* i.d. of Drawable */
+  int event_type;       /* GLX_DAMAGED_SGIX or GLX_SAVED_SGIX */
+  int draw_type;        /* GLX_WINDOW_SGIX or GLX_PBUFFER_SGIX */
+  unsigned int mask;    /* mask indicating which buffers are affected*/
+  int x, y;
+  int width, height;
+  int count; /* if nonzero, at least this many more */
 } GLXBufferClobberEventSGIX;
 typedef struct {
-    char    pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
-    int     networkId;
+  char pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
+  int networkId;
 } GLXHyperpipeNetworkSGIX;
 typedef struct {
-    char    pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
-    int     channel;
-    unsigned int participationType;
-    int     timeSlice;
+  char pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
+  int channel;
+  unsigned int participationType;
+  int timeSlice;
 } GLXHyperpipeConfigSGIX;
 typedef struct {
-    char pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
-    int srcXOrigin, srcYOrigin, srcWidth, srcHeight;
-    int destXOrigin, destYOrigin, destWidth, destHeight;
+  char pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
+  int srcXOrigin, srcYOrigin, srcWidth, srcHeight;
+  int destXOrigin, destYOrigin, destWidth, destHeight;
 } GLXPipeRect;
 typedef struct {
-    char pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
-    int XOrigin, YOrigin, maxHeight, maxWidth;
+  char pipeName[80]; /* Should be [GLX_HYPERPIPE_PIPE_NAME_LENGTH_SGIX] */
+  int XOrigin, YOrigin, maxHeight, maxWidth;
 } GLXPipeRectLimits;
-
 
 #define GLX_VERSION_1_0 1
 GLAD_API_CALL int GLAD_GLX_VERSION_1_0;
@@ -738,140 +720,334 @@ GLAD_API_CALL int GLAD_GLX_SGI_video_sync;
 #define GLX_SUN_get_transparent_index 1
 GLAD_API_CALL int GLAD_GLX_SUN_get_transparent_index;
 
+typedef int (GLAD_API_PTR* PFNGLXBINDCHANNELTOWINDOWSGIXPROC) (
+  Display* display, int screen, int channel, Window window);
+typedef int (GLAD_API_PTR* PFNGLXBINDHYPERPIPESGIXPROC) (Display* dpy,
+                                                         int hpId);
+typedef Bool (GLAD_API_PTR* PFNGLXBINDSWAPBARRIERNVPROC) (Display* dpy,
+                                                          GLuint group,
+                                                          GLuint barrier);
+typedef void (GLAD_API_PTR* PFNGLXBINDSWAPBARRIERSGIXPROC) (
+  Display* dpy, GLXDrawable drawable, int barrier);
+typedef void (GLAD_API_PTR* PFNGLXBINDTEXIMAGEEXTPROC) (
+  Display* dpy, GLXDrawable drawable, int buffer, const int* attrib_list);
+typedef int (GLAD_API_PTR* PFNGLXBINDVIDEOCAPTUREDEVICENVPROC) (
+  Display* dpy, unsigned int video_capture_slot,
+  GLXVideoCaptureDeviceNV device);
+typedef int (GLAD_API_PTR* PFNGLXBINDVIDEODEVICENVPROC) (
+  Display* dpy, unsigned int video_slot, unsigned int video_device,
+  const int* attrib_list);
+typedef int (GLAD_API_PTR* PFNGLXBINDVIDEOIMAGENVPROC) (
+  Display* dpy, GLXVideoDeviceNV VideoDevice, GLXPbuffer pbuf,
+  int iVideoBuffer);
+typedef void (GLAD_API_PTR* PFNGLXBLITCONTEXTFRAMEBUFFERAMDPROC) (
+  GLXContext dstCtx, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+  GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask,
+  GLenum filter);
+typedef int (GLAD_API_PTR* PFNGLXCHANNELRECTSGIXPROC) (Display* display,
+                                                       int screen, int channel,
+                                                       int x, int y, int w,
+                                                       int h);
+typedef int (GLAD_API_PTR* PFNGLXCHANNELRECTSYNCSGIXPROC) (Display* display,
+                                                           int screen,
+                                                           int channel,
+                                                           GLenum synctype);
+typedef GLXFBConfig*(GLAD_API_PTR* PFNGLXCHOOSEFBCONFIGPROC) (
+  Display* dpy, int screen, const int* attrib_list, int* nelements);
+typedef GLXFBConfigSGIX*(GLAD_API_PTR* PFNGLXCHOOSEFBCONFIGSGIXPROC) (
+  Display* dpy, int screen, int* attrib_list, int* nelements);
+typedef XVisualInfo*(GLAD_API_PTR* PFNGLXCHOOSEVISUALPROC) (Display* dpy,
+                                                            int screen,
+                                                            int* attribList);
+typedef void (GLAD_API_PTR* PFNGLXCOPYBUFFERSUBDATANVPROC) (
+  Display* dpy, GLXContext readCtx, GLXContext writeCtx, GLenum readTarget,
+  GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset,
+  GLsizeiptr size);
+typedef void (GLAD_API_PTR* PFNGLXCOPYCONTEXTPROC) (Display* dpy,
+                                                    GLXContext src,
+                                                    GLXContext dst,
+                                                    unsigned long mask);
+typedef void (GLAD_API_PTR* PFNGLXCOPYIMAGESUBDATANVPROC) (
+  Display* dpy, GLXContext srcCtx, GLuint srcName, GLenum srcTarget,
+  GLint srcLevel, GLint srcX, GLint srcY, GLint srcZ, GLXContext dstCtx,
+  GLuint dstName, GLenum dstTarget, GLint dstLevel, GLint dstX, GLint dstY,
+  GLint dstZ, GLsizei width, GLsizei height, GLsizei depth);
+typedef void (GLAD_API_PTR* PFNGLXCOPYSUBBUFFERMESAPROC) (
+  Display* dpy, GLXDrawable drawable, int x, int y, int width, int height);
+typedef GLXContext (GLAD_API_PTR* PFNGLXCREATEASSOCIATEDCONTEXTAMDPROC) (
+  unsigned int id, GLXContext share_list);
+typedef GLXContext (
+  GLAD_API_PTR* PFNGLXCREATEASSOCIATEDCONTEXTATTRIBSAMDPROC) (
+  unsigned int id, GLXContext share_context, const int* attribList);
+typedef GLXContext (GLAD_API_PTR* PFNGLXCREATECONTEXTPROC) (
+  Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct);
+typedef GLXContext (GLAD_API_PTR* PFNGLXCREATECONTEXTATTRIBSARBPROC) (
+  Display* dpy, GLXFBConfig config, GLXContext share_context, Bool direct,
+  const int* attrib_list);
+typedef GLXContext (GLAD_API_PTR* PFNGLXCREATECONTEXTWITHCONFIGSGIXPROC) (
+  Display* dpy, GLXFBConfigSGIX config, int render_type, GLXContext share_list,
+  Bool direct);
+typedef GLXPbufferSGIX (GLAD_API_PTR* PFNGLXCREATEGLXPBUFFERSGIXPROC) (
+  Display* dpy, GLXFBConfigSGIX config, unsigned int width,
+  unsigned int height, int* attrib_list);
+typedef GLXPixmap (GLAD_API_PTR* PFNGLXCREATEGLXPIXMAPPROC) (
+  Display* dpy, XVisualInfo* visual, Pixmap pixmap);
+typedef GLXPixmap (GLAD_API_PTR* PFNGLXCREATEGLXPIXMAPMESAPROC) (
+  Display* dpy, XVisualInfo* visual, Pixmap pixmap, Colormap cmap);
+typedef GLXPixmap (GLAD_API_PTR* PFNGLXCREATEGLXPIXMAPWITHCONFIGSGIXPROC) (
+  Display* dpy, GLXFBConfigSGIX config, Pixmap pixmap);
+typedef GLXContext (GLAD_API_PTR* PFNGLXCREATENEWCONTEXTPROC) (
+  Display* dpy, GLXFBConfig config, int render_type, GLXContext share_list,
+  Bool direct);
+typedef GLXPbuffer (GLAD_API_PTR* PFNGLXCREATEPBUFFERPROC) (
+  Display* dpy, GLXFBConfig config, const int* attrib_list);
+typedef GLXPixmap (GLAD_API_PTR* PFNGLXCREATEPIXMAPPROC) (
+  Display* dpy, GLXFBConfig config, Pixmap pixmap, const int* attrib_list);
+typedef GLXWindow (GLAD_API_PTR* PFNGLXCREATEWINDOWPROC) (
+  Display* dpy, GLXFBConfig config, Window win, const int* attrib_list);
+typedef void (GLAD_API_PTR* PFNGLXCUSHIONSGIPROC) (Display* dpy, Window window,
+                                                   float cushion);
+typedef Bool (GLAD_API_PTR* PFNGLXDELAYBEFORESWAPNVPROC) (Display* dpy,
+                                                          GLXDrawable drawable,
+                                                          GLfloat seconds);
+typedef Bool (GLAD_API_PTR* PFNGLXDELETEASSOCIATEDCONTEXTAMDPROC) (
+  GLXContext ctx);
+typedef void (GLAD_API_PTR* PFNGLXDESTROYCONTEXTPROC) (Display* dpy,
+                                                       GLXContext ctx);
+typedef void (GLAD_API_PTR* PFNGLXDESTROYGLXPBUFFERSGIXPROC) (
+  Display* dpy, GLXPbufferSGIX pbuf);
+typedef void (GLAD_API_PTR* PFNGLXDESTROYGLXPIXMAPPROC) (Display* dpy,
+                                                         GLXPixmap pixmap);
+typedef int (GLAD_API_PTR* PFNGLXDESTROYHYPERPIPECONFIGSGIXPROC) (Display* dpy,
+                                                                  int hpId);
+typedef void (GLAD_API_PTR* PFNGLXDESTROYPBUFFERPROC) (Display* dpy,
+                                                       GLXPbuffer pbuf);
+typedef void (GLAD_API_PTR* PFNGLXDESTROYPIXMAPPROC) (Display* dpy,
+                                                      GLXPixmap pixmap);
+typedef void (GLAD_API_PTR* PFNGLXDESTROYWINDOWPROC) (Display* dpy,
+                                                      GLXWindow win);
+typedef GLXVideoCaptureDeviceNV*(
+  GLAD_API_PTR* PFNGLXENUMERATEVIDEOCAPTUREDEVICESNVPROC) (Display* dpy,
+                                                           int screen,
+                                                           int* nelements);
+typedef unsigned int*(GLAD_API_PTR* PFNGLXENUMERATEVIDEODEVICESNVPROC) (
+  Display* dpy, int screen, int* nelements);
+typedef void (GLAD_API_PTR* PFNGLXFREECONTEXTEXTPROC) (Display* dpy,
+                                                       GLXContext context);
+typedef unsigned int (GLAD_API_PTR* PFNGLXGETAGPOFFSETMESAPROC) (
+  const void* pointer);
+typedef const char*(GLAD_API_PTR* PFNGLXGETCLIENTSTRINGPROC) (Display* dpy,
+                                                              int name);
+typedef int (GLAD_API_PTR* PFNGLXGETCONFIGPROC) (Display* dpy,
+                                                 XVisualInfo* visual,
+                                                 int attrib, int* value);
+typedef unsigned int (GLAD_API_PTR* PFNGLXGETCONTEXTGPUIDAMDPROC) (
+  GLXContext ctx);
+typedef GLXContextID (GLAD_API_PTR* PFNGLXGETCONTEXTIDEXTPROC) (
+  const GLXContext context);
+typedef GLXContext (GLAD_API_PTR* PFNGLXGETCURRENTASSOCIATEDCONTEXTAMDPROC) (
+  void);
+typedef GLXContext (GLAD_API_PTR* PFNGLXGETCURRENTCONTEXTPROC) (void);
+typedef Display*(GLAD_API_PTR* PFNGLXGETCURRENTDISPLAYPROC) (void);
+typedef Display*(GLAD_API_PTR* PFNGLXGETCURRENTDISPLAYEXTPROC) (void);
+typedef GLXDrawable (GLAD_API_PTR* PFNGLXGETCURRENTDRAWABLEPROC) (void);
+typedef GLXDrawable (GLAD_API_PTR* PFNGLXGETCURRENTREADDRAWABLEPROC) (void);
+typedef GLXDrawable (GLAD_API_PTR* PFNGLXGETCURRENTREADDRAWABLESGIPROC) (void);
+typedef int (GLAD_API_PTR* PFNGLXGETFBCONFIGATTRIBPROC) (Display* dpy,
+                                                         GLXFBConfig config,
+                                                         int attribute,
+                                                         int* value);
+typedef int (GLAD_API_PTR* PFNGLXGETFBCONFIGATTRIBSGIXPROC) (
+  Display* dpy, GLXFBConfigSGIX config, int attribute, int* value);
+typedef GLXFBConfigSGIX (GLAD_API_PTR* PFNGLXGETFBCONFIGFROMVISUALSGIXPROC) (
+  Display* dpy, XVisualInfo* vis);
+typedef GLXFBConfig*(GLAD_API_PTR* PFNGLXGETFBCONFIGSPROC) (Display* dpy,
+                                                            int screen,
+                                                            int* nelements);
+typedef unsigned int (GLAD_API_PTR* PFNGLXGETGPUIDSAMDPROC) (
+  unsigned int maxCount, unsigned int* ids);
+typedef int (GLAD_API_PTR* PFNGLXGETGPUINFOAMDPROC) (unsigned int id,
+                                                     int property,
+                                                     GLenum dataType,
+                                                     unsigned int size,
+                                                     void* data);
+typedef Bool (GLAD_API_PTR* PFNGLXGETMSCRATEOMLPROC) (Display* dpy,
+                                                      GLXDrawable drawable,
+                                                      int32_t* numerator,
+                                                      int32_t* denominator);
+typedef __GLXextFuncPtr (GLAD_API_PTR* PFNGLXGETPROCADDRESSPROC) (
+  const GLubyte* procName);
+typedef __GLXextFuncPtr (GLAD_API_PTR* PFNGLXGETPROCADDRESSARBPROC) (
+  const GLubyte* procName);
+typedef void (GLAD_API_PTR* PFNGLXGETSELECTEDEVENTPROC) (
+  Display* dpy, GLXDrawable draw, unsigned long* event_mask);
+typedef void (GLAD_API_PTR* PFNGLXGETSELECTEDEVENTSGIXPROC) (
+  Display* dpy, GLXDrawable drawable, unsigned long* mask);
+typedef int (GLAD_API_PTR* PFNGLXGETSWAPINTERVALMESAPROC) (void);
+typedef Bool (GLAD_API_PTR* PFNGLXGETSYNCVALUESOMLPROC) (Display* dpy,
+                                                         GLXDrawable drawable,
+                                                         int64_t* ust,
+                                                         int64_t* msc,
+                                                         int64_t* sbc);
+typedef Status (GLAD_API_PTR* PFNGLXGETTRANSPARENTINDEXSUNPROC) (
+  Display* dpy, Window overlay, Window underlay,
+  unsigned long* pTransparentIndex);
+typedef int (GLAD_API_PTR* PFNGLXGETVIDEODEVICENVPROC) (
+  Display* dpy, int screen, int numVideoDevices,
+  GLXVideoDeviceNV* pVideoDevice);
+typedef int (GLAD_API_PTR* PFNGLXGETVIDEOINFONVPROC) (
+  Display* dpy, int screen, GLXVideoDeviceNV VideoDevice,
+  unsigned long* pulCounterOutputPbuffer,
+  unsigned long* pulCounterOutputVideo);
+typedef int (GLAD_API_PTR* PFNGLXGETVIDEOSYNCSGIPROC) (unsigned int* count);
+typedef XVisualInfo*(GLAD_API_PTR* PFNGLXGETVISUALFROMFBCONFIGPROC) (
+  Display* dpy, GLXFBConfig config);
+typedef XVisualInfo*(GLAD_API_PTR* PFNGLXGETVISUALFROMFBCONFIGSGIXPROC) (
+  Display* dpy, GLXFBConfigSGIX config);
+typedef int (GLAD_API_PTR* PFNGLXHYPERPIPEATTRIBSGIXPROC) (
+  Display* dpy, int timeSlice, int attrib, int size, void* attribList);
+typedef int (GLAD_API_PTR* PFNGLXHYPERPIPECONFIGSGIXPROC) (
+  Display* dpy, int networkId, int npipes, GLXHyperpipeConfigSGIX* cfg,
+  int* hpId);
+typedef GLXContext (GLAD_API_PTR* PFNGLXIMPORTCONTEXTEXTPROC) (
+  Display* dpy, GLXContextID contextID);
+typedef Bool (GLAD_API_PTR* PFNGLXISDIRECTPROC) (Display* dpy, GLXContext ctx);
+typedef Bool (GLAD_API_PTR* PFNGLXJOINSWAPGROUPNVPROC) (Display* dpy,
+                                                        GLXDrawable drawable,
+                                                        GLuint group);
+typedef void (GLAD_API_PTR* PFNGLXJOINSWAPGROUPSGIXPROC) (Display* dpy,
+                                                          GLXDrawable drawable,
+                                                          GLXDrawable member);
+typedef void (GLAD_API_PTR* PFNGLXLOCKVIDEOCAPTUREDEVICENVPROC) (
+  Display* dpy, GLXVideoCaptureDeviceNV device);
+typedef Bool (GLAD_API_PTR* PFNGLXMAKEASSOCIATEDCONTEXTCURRENTAMDPROC) (
+  GLXContext ctx);
+typedef Bool (GLAD_API_PTR* PFNGLXMAKECONTEXTCURRENTPROC) (Display* dpy,
+                                                           GLXDrawable draw,
+                                                           GLXDrawable read,
+                                                           GLXContext ctx);
+typedef Bool (GLAD_API_PTR* PFNGLXMAKECURRENTPROC) (Display* dpy,
+                                                    GLXDrawable drawable,
+                                                    GLXContext ctx);
+typedef Bool (GLAD_API_PTR* PFNGLXMAKECURRENTREADSGIPROC) (Display* dpy,
+                                                           GLXDrawable draw,
+                                                           GLXDrawable read,
+                                                           GLXContext ctx);
+typedef void (GLAD_API_PTR* PFNGLXNAMEDCOPYBUFFERSUBDATANVPROC) (
+  Display* dpy, GLXContext readCtx, GLXContext writeCtx, GLuint readBuffer,
+  GLuint writeBuffer, GLintptr readOffset, GLintptr writeOffset,
+  GLsizeiptr size);
+typedef int (GLAD_API_PTR* PFNGLXQUERYCHANNELDELTASSGIXPROC) (
+  Display* display, int screen, int channel, int* x, int* y, int* w, int* h);
+typedef int (GLAD_API_PTR* PFNGLXQUERYCHANNELRECTSGIXPROC) (Display* display,
+                                                            int screen,
+                                                            int channel,
+                                                            int* dx, int* dy,
+                                                            int* dw, int* dh);
+typedef int (GLAD_API_PTR* PFNGLXQUERYCONTEXTPROC) (Display* dpy,
+                                                    GLXContext ctx,
+                                                    int attribute, int* value);
+typedef int (GLAD_API_PTR* PFNGLXQUERYCONTEXTINFOEXTPROC) (Display* dpy,
+                                                           GLXContext context,
+                                                           int attribute,
+                                                           int* value);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC) (
+  int attribute, unsigned int* value);
+typedef const char*(GLAD_API_PTR* PFNGLXQUERYCURRENTRENDERERSTRINGMESAPROC) (
+  int attribute);
+typedef void (GLAD_API_PTR* PFNGLXQUERYDRAWABLEPROC) (Display* dpy,
+                                                      GLXDrawable draw,
+                                                      int attribute,
+                                                      unsigned int* value);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYEXTENSIONPROC) (Display* dpy,
+                                                       int* errorb,
+                                                       int* event);
+typedef const char*(GLAD_API_PTR* PFNGLXQUERYEXTENSIONSSTRINGPROC) (
+  Display* dpy, int screen);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYFRAMECOUNTNVPROC) (Display* dpy,
+                                                          int screen,
+                                                          GLuint* count);
+typedef void (GLAD_API_PTR* PFNGLXQUERYGLXPBUFFERSGIXPROC) (
+  Display* dpy, GLXPbufferSGIX pbuf, int attribute, unsigned int* value);
+typedef int (GLAD_API_PTR* PFNGLXQUERYHYPERPIPEATTRIBSGIXPROC) (
+  Display* dpy, int timeSlice, int attrib, int size, void* returnAttribList);
+typedef int (GLAD_API_PTR* PFNGLXQUERYHYPERPIPEBESTATTRIBSGIXPROC) (
+  Display* dpy, int timeSlice, int attrib, int size, void* attribList,
+  void* returnAttribList);
+typedef GLXHyperpipeConfigSGIX*(
+  GLAD_API_PTR* PFNGLXQUERYHYPERPIPECONFIGSGIXPROC) (Display* dpy, int hpId,
+                                                     int* npipes);
+typedef GLXHyperpipeNetworkSGIX*(
+  GLAD_API_PTR* PFNGLXQUERYHYPERPIPENETWORKSGIXPROC) (Display* dpy,
+                                                      int* npipes);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYMAXSWAPBARRIERSSGIXPROC) (Display* dpy,
+                                                                 int screen,
+                                                                 int* max);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYMAXSWAPGROUPSNVPROC) (
+  Display* dpy, int screen, GLuint* maxGroups, GLuint* maxBarriers);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYRENDERERINTEGERMESAPROC) (
+  Display* dpy, int screen, int renderer, int attribute, unsigned int* value);
+typedef const char*(GLAD_API_PTR* PFNGLXQUERYRENDERERSTRINGMESAPROC) (
+  Display* dpy, int screen, int renderer, int attribute);
+typedef const char*(GLAD_API_PTR* PFNGLXQUERYSERVERSTRINGPROC) (Display* dpy,
+                                                                int screen,
+                                                                int name);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYSWAPGROUPNVPROC) (Display* dpy,
+                                                         GLXDrawable drawable,
+                                                         GLuint* group,
+                                                         GLuint* barrier);
+typedef Bool (GLAD_API_PTR* PFNGLXQUERYVERSIONPROC) (Display* dpy, int* maj,
+                                                     int* min);
+typedef int (GLAD_API_PTR* PFNGLXQUERYVIDEOCAPTUREDEVICENVPROC) (
+  Display* dpy, GLXVideoCaptureDeviceNV device, int attribute, int* value);
+typedef Bool (GLAD_API_PTR* PFNGLXRELEASEBUFFERSMESAPROC) (
+  Display* dpy, GLXDrawable drawable);
+typedef void (GLAD_API_PTR* PFNGLXRELEASETEXIMAGEEXTPROC) (
+  Display* dpy, GLXDrawable drawable, int buffer);
+typedef void (GLAD_API_PTR* PFNGLXRELEASEVIDEOCAPTUREDEVICENVPROC) (
+  Display* dpy, GLXVideoCaptureDeviceNV device);
+typedef int (GLAD_API_PTR* PFNGLXRELEASEVIDEODEVICENVPROC) (
+  Display* dpy, int screen, GLXVideoDeviceNV VideoDevice);
+typedef int (GLAD_API_PTR* PFNGLXRELEASEVIDEOIMAGENVPROC) (Display* dpy,
+                                                           GLXPbuffer pbuf);
+typedef Bool (GLAD_API_PTR* PFNGLXRESETFRAMECOUNTNVPROC) (Display* dpy,
+                                                          int screen);
+typedef void (GLAD_API_PTR* PFNGLXSELECTEVENTPROC) (Display* dpy,
+                                                    GLXDrawable draw,
+                                                    unsigned long event_mask);
+typedef void (GLAD_API_PTR* PFNGLXSELECTEVENTSGIXPROC) (Display* dpy,
+                                                        GLXDrawable drawable,
+                                                        unsigned long mask);
+typedef int (GLAD_API_PTR* PFNGLXSENDPBUFFERTOVIDEONVPROC) (
+  Display* dpy, GLXPbuffer pbuf, int iBufferType,
+  unsigned long* pulCounterPbuffer, GLboolean bBlock);
+typedef GLboolean (GLAD_API_PTR* PFNGLXSET3DFXMODEMESAPROC) (GLint mode);
+typedef void (GLAD_API_PTR* PFNGLXSWAPBUFFERSPROC) (Display* dpy,
+                                                    GLXDrawable drawable);
+typedef int64_t (GLAD_API_PTR* PFNGLXSWAPBUFFERSMSCOMLPROC) (
+  Display* dpy, GLXDrawable drawable, int64_t target_msc, int64_t divisor,
+  int64_t remainder);
+typedef void (GLAD_API_PTR* PFNGLXSWAPINTERVALEXTPROC) (Display* dpy,
+                                                        GLXDrawable drawable,
+                                                        int interval);
+typedef int (GLAD_API_PTR* PFNGLXSWAPINTERVALMESAPROC) (unsigned int interval);
+typedef int (GLAD_API_PTR* PFNGLXSWAPINTERVALSGIPROC) (int interval);
+typedef void (GLAD_API_PTR* PFNGLXUSEXFONTPROC) (Font font, int first,
+                                                 int count, int list);
+typedef Bool (GLAD_API_PTR* PFNGLXWAITFORMSCOMLPROC) (
+  Display* dpy, GLXDrawable drawable, int64_t target_msc, int64_t divisor,
+  int64_t remainder, int64_t* ust, int64_t* msc, int64_t* sbc);
+typedef Bool (GLAD_API_PTR* PFNGLXWAITFORSBCOMLPROC) (
+  Display* dpy, GLXDrawable drawable, int64_t target_sbc, int64_t* ust,
+  int64_t* msc, int64_t* sbc);
+typedef void (GLAD_API_PTR* PFNGLXWAITGLPROC) (void);
+typedef int (GLAD_API_PTR* PFNGLXWAITVIDEOSYNCSGIPROC) (int divisor,
+                                                        int remainder,
+                                                        unsigned int* count);
+typedef void (GLAD_API_PTR* PFNGLXWAITXPROC) (void);
 
-typedef int (GLAD_API_PTR *PFNGLXBINDCHANNELTOWINDOWSGIXPROC)(Display * display, int screen, int channel, Window window);
-typedef int (GLAD_API_PTR *PFNGLXBINDHYPERPIPESGIXPROC)(Display * dpy, int hpId);
-typedef Bool (GLAD_API_PTR *PFNGLXBINDSWAPBARRIERNVPROC)(Display * dpy, GLuint group, GLuint barrier);
-typedef void (GLAD_API_PTR *PFNGLXBINDSWAPBARRIERSGIXPROC)(Display * dpy, GLXDrawable drawable, int barrier);
-typedef void (GLAD_API_PTR *PFNGLXBINDTEXIMAGEEXTPROC)(Display * dpy, GLXDrawable drawable, int buffer, const int * attrib_list);
-typedef int (GLAD_API_PTR *PFNGLXBINDVIDEOCAPTUREDEVICENVPROC)(Display * dpy, unsigned int video_capture_slot, GLXVideoCaptureDeviceNV device);
-typedef int (GLAD_API_PTR *PFNGLXBINDVIDEODEVICENVPROC)(Display * dpy, unsigned int video_slot, unsigned int video_device, const int * attrib_list);
-typedef int (GLAD_API_PTR *PFNGLXBINDVIDEOIMAGENVPROC)(Display * dpy, GLXVideoDeviceNV VideoDevice, GLXPbuffer pbuf, int iVideoBuffer);
-typedef void (GLAD_API_PTR *PFNGLXBLITCONTEXTFRAMEBUFFERAMDPROC)(GLXContext dstCtx, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
-typedef int (GLAD_API_PTR *PFNGLXCHANNELRECTSGIXPROC)(Display * display, int screen, int channel, int x, int y, int w, int h);
-typedef int (GLAD_API_PTR *PFNGLXCHANNELRECTSYNCSGIXPROC)(Display * display, int screen, int channel, GLenum synctype);
-typedef GLXFBConfig * (GLAD_API_PTR *PFNGLXCHOOSEFBCONFIGPROC)(Display * dpy, int screen, const int * attrib_list, int * nelements);
-typedef GLXFBConfigSGIX * (GLAD_API_PTR *PFNGLXCHOOSEFBCONFIGSGIXPROC)(Display * dpy, int screen, int * attrib_list, int * nelements);
-typedef XVisualInfo * (GLAD_API_PTR *PFNGLXCHOOSEVISUALPROC)(Display * dpy, int screen, int * attribList);
-typedef void (GLAD_API_PTR *PFNGLXCOPYBUFFERSUBDATANVPROC)(Display * dpy, GLXContext readCtx, GLXContext writeCtx, GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size);
-typedef void (GLAD_API_PTR *PFNGLXCOPYCONTEXTPROC)(Display * dpy, GLXContext src, GLXContext dst, unsigned long mask);
-typedef void (GLAD_API_PTR *PFNGLXCOPYIMAGESUBDATANVPROC)(Display * dpy, GLXContext srcCtx, GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint srcX, GLint srcY, GLint srcZ, GLXContext dstCtx, GLuint dstName, GLenum dstTarget, GLint dstLevel, GLint dstX, GLint dstY, GLint dstZ, GLsizei width, GLsizei height, GLsizei depth);
-typedef void (GLAD_API_PTR *PFNGLXCOPYSUBBUFFERMESAPROC)(Display * dpy, GLXDrawable drawable, int x, int y, int width, int height);
-typedef GLXContext (GLAD_API_PTR *PFNGLXCREATEASSOCIATEDCONTEXTAMDPROC)(unsigned int id, GLXContext share_list);
-typedef GLXContext (GLAD_API_PTR *PFNGLXCREATEASSOCIATEDCONTEXTATTRIBSAMDPROC)(unsigned int id, GLXContext share_context, const int * attribList);
-typedef GLXContext (GLAD_API_PTR *PFNGLXCREATECONTEXTPROC)(Display * dpy, XVisualInfo * vis, GLXContext shareList, Bool direct);
-typedef GLXContext (GLAD_API_PTR *PFNGLXCREATECONTEXTATTRIBSARBPROC)(Display * dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int * attrib_list);
-typedef GLXContext (GLAD_API_PTR *PFNGLXCREATECONTEXTWITHCONFIGSGIXPROC)(Display * dpy, GLXFBConfigSGIX config, int render_type, GLXContext share_list, Bool direct);
-typedef GLXPbufferSGIX (GLAD_API_PTR *PFNGLXCREATEGLXPBUFFERSGIXPROC)(Display * dpy, GLXFBConfigSGIX config, unsigned int width, unsigned int height, int * attrib_list);
-typedef GLXPixmap (GLAD_API_PTR *PFNGLXCREATEGLXPIXMAPPROC)(Display * dpy, XVisualInfo * visual, Pixmap pixmap);
-typedef GLXPixmap (GLAD_API_PTR *PFNGLXCREATEGLXPIXMAPMESAPROC)(Display * dpy, XVisualInfo * visual, Pixmap pixmap, Colormap cmap);
-typedef GLXPixmap (GLAD_API_PTR *PFNGLXCREATEGLXPIXMAPWITHCONFIGSGIXPROC)(Display * dpy, GLXFBConfigSGIX config, Pixmap pixmap);
-typedef GLXContext (GLAD_API_PTR *PFNGLXCREATENEWCONTEXTPROC)(Display * dpy, GLXFBConfig config, int render_type, GLXContext share_list, Bool direct);
-typedef GLXPbuffer (GLAD_API_PTR *PFNGLXCREATEPBUFFERPROC)(Display * dpy, GLXFBConfig config, const int * attrib_list);
-typedef GLXPixmap (GLAD_API_PTR *PFNGLXCREATEPIXMAPPROC)(Display * dpy, GLXFBConfig config, Pixmap pixmap, const int * attrib_list);
-typedef GLXWindow (GLAD_API_PTR *PFNGLXCREATEWINDOWPROC)(Display * dpy, GLXFBConfig config, Window win, const int * attrib_list);
-typedef void (GLAD_API_PTR *PFNGLXCUSHIONSGIPROC)(Display * dpy, Window window, float cushion);
-typedef Bool (GLAD_API_PTR *PFNGLXDELAYBEFORESWAPNVPROC)(Display * dpy, GLXDrawable drawable, GLfloat seconds);
-typedef Bool (GLAD_API_PTR *PFNGLXDELETEASSOCIATEDCONTEXTAMDPROC)(GLXContext ctx);
-typedef void (GLAD_API_PTR *PFNGLXDESTROYCONTEXTPROC)(Display * dpy, GLXContext ctx);
-typedef void (GLAD_API_PTR *PFNGLXDESTROYGLXPBUFFERSGIXPROC)(Display * dpy, GLXPbufferSGIX pbuf);
-typedef void (GLAD_API_PTR *PFNGLXDESTROYGLXPIXMAPPROC)(Display * dpy, GLXPixmap pixmap);
-typedef int (GLAD_API_PTR *PFNGLXDESTROYHYPERPIPECONFIGSGIXPROC)(Display * dpy, int hpId);
-typedef void (GLAD_API_PTR *PFNGLXDESTROYPBUFFERPROC)(Display * dpy, GLXPbuffer pbuf);
-typedef void (GLAD_API_PTR *PFNGLXDESTROYPIXMAPPROC)(Display * dpy, GLXPixmap pixmap);
-typedef void (GLAD_API_PTR *PFNGLXDESTROYWINDOWPROC)(Display * dpy, GLXWindow win);
-typedef GLXVideoCaptureDeviceNV * (GLAD_API_PTR *PFNGLXENUMERATEVIDEOCAPTUREDEVICESNVPROC)(Display * dpy, int screen, int * nelements);
-typedef unsigned int * (GLAD_API_PTR *PFNGLXENUMERATEVIDEODEVICESNVPROC)(Display * dpy, int screen, int * nelements);
-typedef void (GLAD_API_PTR *PFNGLXFREECONTEXTEXTPROC)(Display * dpy, GLXContext context);
-typedef unsigned int (GLAD_API_PTR *PFNGLXGETAGPOFFSETMESAPROC)(const void * pointer);
-typedef const char * (GLAD_API_PTR *PFNGLXGETCLIENTSTRINGPROC)(Display * dpy, int name);
-typedef int (GLAD_API_PTR *PFNGLXGETCONFIGPROC)(Display * dpy, XVisualInfo * visual, int attrib, int * value);
-typedef unsigned int (GLAD_API_PTR *PFNGLXGETCONTEXTGPUIDAMDPROC)(GLXContext ctx);
-typedef GLXContextID (GLAD_API_PTR *PFNGLXGETCONTEXTIDEXTPROC)(const GLXContext context);
-typedef GLXContext (GLAD_API_PTR *PFNGLXGETCURRENTASSOCIATEDCONTEXTAMDPROC)(void);
-typedef GLXContext (GLAD_API_PTR *PFNGLXGETCURRENTCONTEXTPROC)(void);
-typedef Display * (GLAD_API_PTR *PFNGLXGETCURRENTDISPLAYPROC)(void);
-typedef Display * (GLAD_API_PTR *PFNGLXGETCURRENTDISPLAYEXTPROC)(void);
-typedef GLXDrawable (GLAD_API_PTR *PFNGLXGETCURRENTDRAWABLEPROC)(void);
-typedef GLXDrawable (GLAD_API_PTR *PFNGLXGETCURRENTREADDRAWABLEPROC)(void);
-typedef GLXDrawable (GLAD_API_PTR *PFNGLXGETCURRENTREADDRAWABLESGIPROC)(void);
-typedef int (GLAD_API_PTR *PFNGLXGETFBCONFIGATTRIBPROC)(Display * dpy, GLXFBConfig config, int attribute, int * value);
-typedef int (GLAD_API_PTR *PFNGLXGETFBCONFIGATTRIBSGIXPROC)(Display * dpy, GLXFBConfigSGIX config, int attribute, int * value);
-typedef GLXFBConfigSGIX (GLAD_API_PTR *PFNGLXGETFBCONFIGFROMVISUALSGIXPROC)(Display * dpy, XVisualInfo * vis);
-typedef GLXFBConfig * (GLAD_API_PTR *PFNGLXGETFBCONFIGSPROC)(Display * dpy, int screen, int * nelements);
-typedef unsigned int (GLAD_API_PTR *PFNGLXGETGPUIDSAMDPROC)(unsigned int maxCount, unsigned int * ids);
-typedef int (GLAD_API_PTR *PFNGLXGETGPUINFOAMDPROC)(unsigned int id, int property, GLenum dataType, unsigned int size, void * data);
-typedef Bool (GLAD_API_PTR *PFNGLXGETMSCRATEOMLPROC)(Display * dpy, GLXDrawable drawable, int32_t * numerator, int32_t * denominator);
-typedef __GLXextFuncPtr (GLAD_API_PTR *PFNGLXGETPROCADDRESSPROC)(const GLubyte * procName);
-typedef __GLXextFuncPtr (GLAD_API_PTR *PFNGLXGETPROCADDRESSARBPROC)(const GLubyte * procName);
-typedef void (GLAD_API_PTR *PFNGLXGETSELECTEDEVENTPROC)(Display * dpy, GLXDrawable draw, unsigned long * event_mask);
-typedef void (GLAD_API_PTR *PFNGLXGETSELECTEDEVENTSGIXPROC)(Display * dpy, GLXDrawable drawable, unsigned long * mask);
-typedef int (GLAD_API_PTR *PFNGLXGETSWAPINTERVALMESAPROC)(void);
-typedef Bool (GLAD_API_PTR *PFNGLXGETSYNCVALUESOMLPROC)(Display * dpy, GLXDrawable drawable, int64_t * ust, int64_t * msc, int64_t * sbc);
-typedef Status (GLAD_API_PTR *PFNGLXGETTRANSPARENTINDEXSUNPROC)(Display * dpy, Window overlay, Window underlay, unsigned long * pTransparentIndex);
-typedef int (GLAD_API_PTR *PFNGLXGETVIDEODEVICENVPROC)(Display * dpy, int screen, int numVideoDevices, GLXVideoDeviceNV * pVideoDevice);
-typedef int (GLAD_API_PTR *PFNGLXGETVIDEOINFONVPROC)(Display * dpy, int screen, GLXVideoDeviceNV VideoDevice, unsigned long * pulCounterOutputPbuffer, unsigned long * pulCounterOutputVideo);
-typedef int (GLAD_API_PTR *PFNGLXGETVIDEOSYNCSGIPROC)(unsigned int * count);
-typedef XVisualInfo * (GLAD_API_PTR *PFNGLXGETVISUALFROMFBCONFIGPROC)(Display * dpy, GLXFBConfig config);
-typedef XVisualInfo * (GLAD_API_PTR *PFNGLXGETVISUALFROMFBCONFIGSGIXPROC)(Display * dpy, GLXFBConfigSGIX config);
-typedef int (GLAD_API_PTR *PFNGLXHYPERPIPEATTRIBSGIXPROC)(Display * dpy, int timeSlice, int attrib, int size, void * attribList);
-typedef int (GLAD_API_PTR *PFNGLXHYPERPIPECONFIGSGIXPROC)(Display * dpy, int networkId, int npipes, GLXHyperpipeConfigSGIX * cfg, int * hpId);
-typedef GLXContext (GLAD_API_PTR *PFNGLXIMPORTCONTEXTEXTPROC)(Display * dpy, GLXContextID contextID);
-typedef Bool (GLAD_API_PTR *PFNGLXISDIRECTPROC)(Display * dpy, GLXContext ctx);
-typedef Bool (GLAD_API_PTR *PFNGLXJOINSWAPGROUPNVPROC)(Display * dpy, GLXDrawable drawable, GLuint group);
-typedef void (GLAD_API_PTR *PFNGLXJOINSWAPGROUPSGIXPROC)(Display * dpy, GLXDrawable drawable, GLXDrawable member);
-typedef void (GLAD_API_PTR *PFNGLXLOCKVIDEOCAPTUREDEVICENVPROC)(Display * dpy, GLXVideoCaptureDeviceNV device);
-typedef Bool (GLAD_API_PTR *PFNGLXMAKEASSOCIATEDCONTEXTCURRENTAMDPROC)(GLXContext ctx);
-typedef Bool (GLAD_API_PTR *PFNGLXMAKECONTEXTCURRENTPROC)(Display * dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
-typedef Bool (GLAD_API_PTR *PFNGLXMAKECURRENTPROC)(Display * dpy, GLXDrawable drawable, GLXContext ctx);
-typedef Bool (GLAD_API_PTR *PFNGLXMAKECURRENTREADSGIPROC)(Display * dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
-typedef void (GLAD_API_PTR *PFNGLXNAMEDCOPYBUFFERSUBDATANVPROC)(Display * dpy, GLXContext readCtx, GLXContext writeCtx, GLuint readBuffer, GLuint writeBuffer, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size);
-typedef int (GLAD_API_PTR *PFNGLXQUERYCHANNELDELTASSGIXPROC)(Display * display, int screen, int channel, int * x, int * y, int * w, int * h);
-typedef int (GLAD_API_PTR *PFNGLXQUERYCHANNELRECTSGIXPROC)(Display * display, int screen, int channel, int * dx, int * dy, int * dw, int * dh);
-typedef int (GLAD_API_PTR *PFNGLXQUERYCONTEXTPROC)(Display * dpy, GLXContext ctx, int attribute, int * value);
-typedef int (GLAD_API_PTR *PFNGLXQUERYCONTEXTINFOEXTPROC)(Display * dpy, GLXContext context, int attribute, int * value);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC)(int attribute, unsigned int * value);
-typedef const char * (GLAD_API_PTR *PFNGLXQUERYCURRENTRENDERERSTRINGMESAPROC)(int attribute);
-typedef void (GLAD_API_PTR *PFNGLXQUERYDRAWABLEPROC)(Display * dpy, GLXDrawable draw, int attribute, unsigned int * value);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYEXTENSIONPROC)(Display * dpy, int * errorb, int * event);
-typedef const char * (GLAD_API_PTR *PFNGLXQUERYEXTENSIONSSTRINGPROC)(Display * dpy, int screen);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYFRAMECOUNTNVPROC)(Display * dpy, int screen, GLuint * count);
-typedef void (GLAD_API_PTR *PFNGLXQUERYGLXPBUFFERSGIXPROC)(Display * dpy, GLXPbufferSGIX pbuf, int attribute, unsigned int * value);
-typedef int (GLAD_API_PTR *PFNGLXQUERYHYPERPIPEATTRIBSGIXPROC)(Display * dpy, int timeSlice, int attrib, int size, void * returnAttribList);
-typedef int (GLAD_API_PTR *PFNGLXQUERYHYPERPIPEBESTATTRIBSGIXPROC)(Display * dpy, int timeSlice, int attrib, int size, void * attribList, void * returnAttribList);
-typedef GLXHyperpipeConfigSGIX * (GLAD_API_PTR *PFNGLXQUERYHYPERPIPECONFIGSGIXPROC)(Display * dpy, int hpId, int * npipes);
-typedef GLXHyperpipeNetworkSGIX * (GLAD_API_PTR *PFNGLXQUERYHYPERPIPENETWORKSGIXPROC)(Display * dpy, int * npipes);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYMAXSWAPBARRIERSSGIXPROC)(Display * dpy, int screen, int * max);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYMAXSWAPGROUPSNVPROC)(Display * dpy, int screen, GLuint * maxGroups, GLuint * maxBarriers);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYRENDERERINTEGERMESAPROC)(Display * dpy, int screen, int renderer, int attribute, unsigned int * value);
-typedef const char * (GLAD_API_PTR *PFNGLXQUERYRENDERERSTRINGMESAPROC)(Display * dpy, int screen, int renderer, int attribute);
-typedef const char * (GLAD_API_PTR *PFNGLXQUERYSERVERSTRINGPROC)(Display * dpy, int screen, int name);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYSWAPGROUPNVPROC)(Display * dpy, GLXDrawable drawable, GLuint * group, GLuint * barrier);
-typedef Bool (GLAD_API_PTR *PFNGLXQUERYVERSIONPROC)(Display * dpy, int * maj, int * min);
-typedef int (GLAD_API_PTR *PFNGLXQUERYVIDEOCAPTUREDEVICENVPROC)(Display * dpy, GLXVideoCaptureDeviceNV device, int attribute, int * value);
-typedef Bool (GLAD_API_PTR *PFNGLXRELEASEBUFFERSMESAPROC)(Display * dpy, GLXDrawable drawable);
-typedef void (GLAD_API_PTR *PFNGLXRELEASETEXIMAGEEXTPROC)(Display * dpy, GLXDrawable drawable, int buffer);
-typedef void (GLAD_API_PTR *PFNGLXRELEASEVIDEOCAPTUREDEVICENVPROC)(Display * dpy, GLXVideoCaptureDeviceNV device);
-typedef int (GLAD_API_PTR *PFNGLXRELEASEVIDEODEVICENVPROC)(Display * dpy, int screen, GLXVideoDeviceNV VideoDevice);
-typedef int (GLAD_API_PTR *PFNGLXRELEASEVIDEOIMAGENVPROC)(Display * dpy, GLXPbuffer pbuf);
-typedef Bool (GLAD_API_PTR *PFNGLXRESETFRAMECOUNTNVPROC)(Display * dpy, int screen);
-typedef void (GLAD_API_PTR *PFNGLXSELECTEVENTPROC)(Display * dpy, GLXDrawable draw, unsigned long event_mask);
-typedef void (GLAD_API_PTR *PFNGLXSELECTEVENTSGIXPROC)(Display * dpy, GLXDrawable drawable, unsigned long mask);
-typedef int (GLAD_API_PTR *PFNGLXSENDPBUFFERTOVIDEONVPROC)(Display * dpy, GLXPbuffer pbuf, int iBufferType, unsigned long * pulCounterPbuffer, GLboolean bBlock);
-typedef GLboolean (GLAD_API_PTR *PFNGLXSET3DFXMODEMESAPROC)(GLint mode);
-typedef void (GLAD_API_PTR *PFNGLXSWAPBUFFERSPROC)(Display * dpy, GLXDrawable drawable);
-typedef int64_t (GLAD_API_PTR *PFNGLXSWAPBUFFERSMSCOMLPROC)(Display * dpy, GLXDrawable drawable, int64_t target_msc, int64_t divisor, int64_t remainder);
-typedef void (GLAD_API_PTR *PFNGLXSWAPINTERVALEXTPROC)(Display * dpy, GLXDrawable drawable, int interval);
-typedef int (GLAD_API_PTR *PFNGLXSWAPINTERVALMESAPROC)(unsigned int interval);
-typedef int (GLAD_API_PTR *PFNGLXSWAPINTERVALSGIPROC)(int interval);
-typedef void (GLAD_API_PTR *PFNGLXUSEXFONTPROC)(Font font, int first, int count, int list);
-typedef Bool (GLAD_API_PTR *PFNGLXWAITFORMSCOMLPROC)(Display * dpy, GLXDrawable drawable, int64_t target_msc, int64_t divisor, int64_t remainder, int64_t * ust, int64_t * msc, int64_t * sbc);
-typedef Bool (GLAD_API_PTR *PFNGLXWAITFORSBCOMLPROC)(Display * dpy, GLXDrawable drawable, int64_t target_sbc, int64_t * ust, int64_t * msc, int64_t * sbc);
-typedef void (GLAD_API_PTR *PFNGLXWAITGLPROC)(void);
-typedef int (GLAD_API_PTR *PFNGLXWAITVIDEOSYNCSGIPROC)(int divisor, int remainder, unsigned int * count);
-typedef void (GLAD_API_PTR *PFNGLXWAITXPROC)(void);
-
-GLAD_API_CALL PFNGLXBINDCHANNELTOWINDOWSGIXPROC glad_glXBindChannelToWindowSGIX;
+GLAD_API_CALL PFNGLXBINDCHANNELTOWINDOWSGIXPROC
+  glad_glXBindChannelToWindowSGIX;
 #define glXBindChannelToWindowSGIX glad_glXBindChannelToWindowSGIX
 GLAD_API_CALL PFNGLXBINDHYPERPIPESGIXPROC glad_glXBindHyperpipeSGIX;
 #define glXBindHyperpipeSGIX glad_glXBindHyperpipeSGIX
@@ -881,13 +1057,15 @@ GLAD_API_CALL PFNGLXBINDSWAPBARRIERSGIXPROC glad_glXBindSwapBarrierSGIX;
 #define glXBindSwapBarrierSGIX glad_glXBindSwapBarrierSGIX
 GLAD_API_CALL PFNGLXBINDTEXIMAGEEXTPROC glad_glXBindTexImageEXT;
 #define glXBindTexImageEXT glad_glXBindTexImageEXT
-GLAD_API_CALL PFNGLXBINDVIDEOCAPTUREDEVICENVPROC glad_glXBindVideoCaptureDeviceNV;
+GLAD_API_CALL PFNGLXBINDVIDEOCAPTUREDEVICENVPROC
+  glad_glXBindVideoCaptureDeviceNV;
 #define glXBindVideoCaptureDeviceNV glad_glXBindVideoCaptureDeviceNV
 GLAD_API_CALL PFNGLXBINDVIDEODEVICENVPROC glad_glXBindVideoDeviceNV;
 #define glXBindVideoDeviceNV glad_glXBindVideoDeviceNV
 GLAD_API_CALL PFNGLXBINDVIDEOIMAGENVPROC glad_glXBindVideoImageNV;
 #define glXBindVideoImageNV glad_glXBindVideoImageNV
-GLAD_API_CALL PFNGLXBLITCONTEXTFRAMEBUFFERAMDPROC glad_glXBlitContextFramebufferAMD;
+GLAD_API_CALL PFNGLXBLITCONTEXTFRAMEBUFFERAMDPROC
+  glad_glXBlitContextFramebufferAMD;
 #define glXBlitContextFramebufferAMD glad_glXBlitContextFramebufferAMD
 GLAD_API_CALL PFNGLXCHANNELRECTSGIXPROC glad_glXChannelRectSGIX;
 #define glXChannelRectSGIX glad_glXChannelRectSGIX
@@ -907,15 +1085,20 @@ GLAD_API_CALL PFNGLXCOPYIMAGESUBDATANVPROC glad_glXCopyImageSubDataNV;
 #define glXCopyImageSubDataNV glad_glXCopyImageSubDataNV
 GLAD_API_CALL PFNGLXCOPYSUBBUFFERMESAPROC glad_glXCopySubBufferMESA;
 #define glXCopySubBufferMESA glad_glXCopySubBufferMESA
-GLAD_API_CALL PFNGLXCREATEASSOCIATEDCONTEXTAMDPROC glad_glXCreateAssociatedContextAMD;
+GLAD_API_CALL PFNGLXCREATEASSOCIATEDCONTEXTAMDPROC
+  glad_glXCreateAssociatedContextAMD;
 #define glXCreateAssociatedContextAMD glad_glXCreateAssociatedContextAMD
-GLAD_API_CALL PFNGLXCREATEASSOCIATEDCONTEXTATTRIBSAMDPROC glad_glXCreateAssociatedContextAttribsAMD;
-#define glXCreateAssociatedContextAttribsAMD glad_glXCreateAssociatedContextAttribsAMD
+GLAD_API_CALL PFNGLXCREATEASSOCIATEDCONTEXTATTRIBSAMDPROC
+  glad_glXCreateAssociatedContextAttribsAMD;
+#define glXCreateAssociatedContextAttribsAMD                                  \
+  glad_glXCreateAssociatedContextAttribsAMD
 GLAD_API_CALL PFNGLXCREATECONTEXTPROC glad_glXCreateContext;
 #define glXCreateContext glad_glXCreateContext
-GLAD_API_CALL PFNGLXCREATECONTEXTATTRIBSARBPROC glad_glXCreateContextAttribsARB;
+GLAD_API_CALL PFNGLXCREATECONTEXTATTRIBSARBPROC
+  glad_glXCreateContextAttribsARB;
 #define glXCreateContextAttribsARB glad_glXCreateContextAttribsARB
-GLAD_API_CALL PFNGLXCREATECONTEXTWITHCONFIGSGIXPROC glad_glXCreateContextWithConfigSGIX;
+GLAD_API_CALL PFNGLXCREATECONTEXTWITHCONFIGSGIXPROC
+  glad_glXCreateContextWithConfigSGIX;
 #define glXCreateContextWithConfigSGIX glad_glXCreateContextWithConfigSGIX
 GLAD_API_CALL PFNGLXCREATEGLXPBUFFERSGIXPROC glad_glXCreateGLXPbufferSGIX;
 #define glXCreateGLXPbufferSGIX glad_glXCreateGLXPbufferSGIX
@@ -923,7 +1106,8 @@ GLAD_API_CALL PFNGLXCREATEGLXPIXMAPPROC glad_glXCreateGLXPixmap;
 #define glXCreateGLXPixmap glad_glXCreateGLXPixmap
 GLAD_API_CALL PFNGLXCREATEGLXPIXMAPMESAPROC glad_glXCreateGLXPixmapMESA;
 #define glXCreateGLXPixmapMESA glad_glXCreateGLXPixmapMESA
-GLAD_API_CALL PFNGLXCREATEGLXPIXMAPWITHCONFIGSGIXPROC glad_glXCreateGLXPixmapWithConfigSGIX;
+GLAD_API_CALL PFNGLXCREATEGLXPIXMAPWITHCONFIGSGIXPROC
+  glad_glXCreateGLXPixmapWithConfigSGIX;
 #define glXCreateGLXPixmapWithConfigSGIX glad_glXCreateGLXPixmapWithConfigSGIX
 GLAD_API_CALL PFNGLXCREATENEWCONTEXTPROC glad_glXCreateNewContext;
 #define glXCreateNewContext glad_glXCreateNewContext
@@ -937,7 +1121,8 @@ GLAD_API_CALL PFNGLXCUSHIONSGIPROC glad_glXCushionSGI;
 #define glXCushionSGI glad_glXCushionSGI
 GLAD_API_CALL PFNGLXDELAYBEFORESWAPNVPROC glad_glXDelayBeforeSwapNV;
 #define glXDelayBeforeSwapNV glad_glXDelayBeforeSwapNV
-GLAD_API_CALL PFNGLXDELETEASSOCIATEDCONTEXTAMDPROC glad_glXDeleteAssociatedContextAMD;
+GLAD_API_CALL PFNGLXDELETEASSOCIATEDCONTEXTAMDPROC
+  glad_glXDeleteAssociatedContextAMD;
 #define glXDeleteAssociatedContextAMD glad_glXDeleteAssociatedContextAMD
 GLAD_API_CALL PFNGLXDESTROYCONTEXTPROC glad_glXDestroyContext;
 #define glXDestroyContext glad_glXDestroyContext
@@ -945,7 +1130,8 @@ GLAD_API_CALL PFNGLXDESTROYGLXPBUFFERSGIXPROC glad_glXDestroyGLXPbufferSGIX;
 #define glXDestroyGLXPbufferSGIX glad_glXDestroyGLXPbufferSGIX
 GLAD_API_CALL PFNGLXDESTROYGLXPIXMAPPROC glad_glXDestroyGLXPixmap;
 #define glXDestroyGLXPixmap glad_glXDestroyGLXPixmap
-GLAD_API_CALL PFNGLXDESTROYHYPERPIPECONFIGSGIXPROC glad_glXDestroyHyperpipeConfigSGIX;
+GLAD_API_CALL PFNGLXDESTROYHYPERPIPECONFIGSGIXPROC
+  glad_glXDestroyHyperpipeConfigSGIX;
 #define glXDestroyHyperpipeConfigSGIX glad_glXDestroyHyperpipeConfigSGIX
 GLAD_API_CALL PFNGLXDESTROYPBUFFERPROC glad_glXDestroyPbuffer;
 #define glXDestroyPbuffer glad_glXDestroyPbuffer
@@ -953,9 +1139,12 @@ GLAD_API_CALL PFNGLXDESTROYPIXMAPPROC glad_glXDestroyPixmap;
 #define glXDestroyPixmap glad_glXDestroyPixmap
 GLAD_API_CALL PFNGLXDESTROYWINDOWPROC glad_glXDestroyWindow;
 #define glXDestroyWindow glad_glXDestroyWindow
-GLAD_API_CALL PFNGLXENUMERATEVIDEOCAPTUREDEVICESNVPROC glad_glXEnumerateVideoCaptureDevicesNV;
-#define glXEnumerateVideoCaptureDevicesNV glad_glXEnumerateVideoCaptureDevicesNV
-GLAD_API_CALL PFNGLXENUMERATEVIDEODEVICESNVPROC glad_glXEnumerateVideoDevicesNV;
+GLAD_API_CALL PFNGLXENUMERATEVIDEOCAPTUREDEVICESNVPROC
+  glad_glXEnumerateVideoCaptureDevicesNV;
+#define glXEnumerateVideoCaptureDevicesNV                                     \
+  glad_glXEnumerateVideoCaptureDevicesNV
+GLAD_API_CALL PFNGLXENUMERATEVIDEODEVICESNVPROC
+  glad_glXEnumerateVideoDevicesNV;
 #define glXEnumerateVideoDevicesNV glad_glXEnumerateVideoDevicesNV
 GLAD_API_CALL PFNGLXFREECONTEXTEXTPROC glad_glXFreeContextEXT;
 #define glXFreeContextEXT glad_glXFreeContextEXT
@@ -969,8 +1158,10 @@ GLAD_API_CALL PFNGLXGETCONTEXTGPUIDAMDPROC glad_glXGetContextGPUIDAMD;
 #define glXGetContextGPUIDAMD glad_glXGetContextGPUIDAMD
 GLAD_API_CALL PFNGLXGETCONTEXTIDEXTPROC glad_glXGetContextIDEXT;
 #define glXGetContextIDEXT glad_glXGetContextIDEXT
-GLAD_API_CALL PFNGLXGETCURRENTASSOCIATEDCONTEXTAMDPROC glad_glXGetCurrentAssociatedContextAMD;
-#define glXGetCurrentAssociatedContextAMD glad_glXGetCurrentAssociatedContextAMD
+GLAD_API_CALL PFNGLXGETCURRENTASSOCIATEDCONTEXTAMDPROC
+  glad_glXGetCurrentAssociatedContextAMD;
+#define glXGetCurrentAssociatedContextAMD                                     \
+  glad_glXGetCurrentAssociatedContextAMD
 GLAD_API_CALL PFNGLXGETCURRENTCONTEXTPROC glad_glXGetCurrentContext;
 #define glXGetCurrentContext glad_glXGetCurrentContext
 GLAD_API_CALL PFNGLXGETCURRENTDISPLAYPROC glad_glXGetCurrentDisplay;
@@ -981,13 +1172,15 @@ GLAD_API_CALL PFNGLXGETCURRENTDRAWABLEPROC glad_glXGetCurrentDrawable;
 #define glXGetCurrentDrawable glad_glXGetCurrentDrawable
 GLAD_API_CALL PFNGLXGETCURRENTREADDRAWABLEPROC glad_glXGetCurrentReadDrawable;
 #define glXGetCurrentReadDrawable glad_glXGetCurrentReadDrawable
-GLAD_API_CALL PFNGLXGETCURRENTREADDRAWABLESGIPROC glad_glXGetCurrentReadDrawableSGI;
+GLAD_API_CALL PFNGLXGETCURRENTREADDRAWABLESGIPROC
+  glad_glXGetCurrentReadDrawableSGI;
 #define glXGetCurrentReadDrawableSGI glad_glXGetCurrentReadDrawableSGI
 GLAD_API_CALL PFNGLXGETFBCONFIGATTRIBPROC glad_glXGetFBConfigAttrib;
 #define glXGetFBConfigAttrib glad_glXGetFBConfigAttrib
 GLAD_API_CALL PFNGLXGETFBCONFIGATTRIBSGIXPROC glad_glXGetFBConfigAttribSGIX;
 #define glXGetFBConfigAttribSGIX glad_glXGetFBConfigAttribSGIX
-GLAD_API_CALL PFNGLXGETFBCONFIGFROMVISUALSGIXPROC glad_glXGetFBConfigFromVisualSGIX;
+GLAD_API_CALL PFNGLXGETFBCONFIGFROMVISUALSGIXPROC
+  glad_glXGetFBConfigFromVisualSGIX;
 #define glXGetFBConfigFromVisualSGIX glad_glXGetFBConfigFromVisualSGIX
 GLAD_API_CALL PFNGLXGETFBCONFIGSPROC glad_glXGetFBConfigs;
 #define glXGetFBConfigs glad_glXGetFBConfigs
@@ -1019,7 +1212,8 @@ GLAD_API_CALL PFNGLXGETVIDEOSYNCSGIPROC glad_glXGetVideoSyncSGI;
 #define glXGetVideoSyncSGI glad_glXGetVideoSyncSGI
 GLAD_API_CALL PFNGLXGETVISUALFROMFBCONFIGPROC glad_glXGetVisualFromFBConfig;
 #define glXGetVisualFromFBConfig glad_glXGetVisualFromFBConfig
-GLAD_API_CALL PFNGLXGETVISUALFROMFBCONFIGSGIXPROC glad_glXGetVisualFromFBConfigSGIX;
+GLAD_API_CALL PFNGLXGETVISUALFROMFBCONFIGSGIXPROC
+  glad_glXGetVisualFromFBConfigSGIX;
 #define glXGetVisualFromFBConfigSGIX glad_glXGetVisualFromFBConfigSGIX
 GLAD_API_CALL PFNGLXHYPERPIPEATTRIBSGIXPROC glad_glXHyperpipeAttribSGIX;
 #define glXHyperpipeAttribSGIX glad_glXHyperpipeAttribSGIX
@@ -1033,17 +1227,21 @@ GLAD_API_CALL PFNGLXJOINSWAPGROUPNVPROC glad_glXJoinSwapGroupNV;
 #define glXJoinSwapGroupNV glad_glXJoinSwapGroupNV
 GLAD_API_CALL PFNGLXJOINSWAPGROUPSGIXPROC glad_glXJoinSwapGroupSGIX;
 #define glXJoinSwapGroupSGIX glad_glXJoinSwapGroupSGIX
-GLAD_API_CALL PFNGLXLOCKVIDEOCAPTUREDEVICENVPROC glad_glXLockVideoCaptureDeviceNV;
+GLAD_API_CALL PFNGLXLOCKVIDEOCAPTUREDEVICENVPROC
+  glad_glXLockVideoCaptureDeviceNV;
 #define glXLockVideoCaptureDeviceNV glad_glXLockVideoCaptureDeviceNV
-GLAD_API_CALL PFNGLXMAKEASSOCIATEDCONTEXTCURRENTAMDPROC glad_glXMakeAssociatedContextCurrentAMD;
-#define glXMakeAssociatedContextCurrentAMD glad_glXMakeAssociatedContextCurrentAMD
+GLAD_API_CALL PFNGLXMAKEASSOCIATEDCONTEXTCURRENTAMDPROC
+  glad_glXMakeAssociatedContextCurrentAMD;
+#define glXMakeAssociatedContextCurrentAMD                                    \
+  glad_glXMakeAssociatedContextCurrentAMD
 GLAD_API_CALL PFNGLXMAKECONTEXTCURRENTPROC glad_glXMakeContextCurrent;
 #define glXMakeContextCurrent glad_glXMakeContextCurrent
 GLAD_API_CALL PFNGLXMAKECURRENTPROC glad_glXMakeCurrent;
 #define glXMakeCurrent glad_glXMakeCurrent
 GLAD_API_CALL PFNGLXMAKECURRENTREADSGIPROC glad_glXMakeCurrentReadSGI;
 #define glXMakeCurrentReadSGI glad_glXMakeCurrentReadSGI
-GLAD_API_CALL PFNGLXNAMEDCOPYBUFFERSUBDATANVPROC glad_glXNamedCopyBufferSubDataNV;
+GLAD_API_CALL PFNGLXNAMEDCOPYBUFFERSUBDATANVPROC
+  glad_glXNamedCopyBufferSubDataNV;
 #define glXNamedCopyBufferSubDataNV glad_glXNamedCopyBufferSubDataNV
 GLAD_API_CALL PFNGLXQUERYCHANNELDELTASSGIXPROC glad_glXQueryChannelDeltasSGIX;
 #define glXQueryChannelDeltasSGIX glad_glXQueryChannelDeltasSGIX
@@ -1053,10 +1251,14 @@ GLAD_API_CALL PFNGLXQUERYCONTEXTPROC glad_glXQueryContext;
 #define glXQueryContext glad_glXQueryContext
 GLAD_API_CALL PFNGLXQUERYCONTEXTINFOEXTPROC glad_glXQueryContextInfoEXT;
 #define glXQueryContextInfoEXT glad_glXQueryContextInfoEXT
-GLAD_API_CALL PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC glad_glXQueryCurrentRendererIntegerMESA;
-#define glXQueryCurrentRendererIntegerMESA glad_glXQueryCurrentRendererIntegerMESA
-GLAD_API_CALL PFNGLXQUERYCURRENTRENDERERSTRINGMESAPROC glad_glXQueryCurrentRendererStringMESA;
-#define glXQueryCurrentRendererStringMESA glad_glXQueryCurrentRendererStringMESA
+GLAD_API_CALL PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC
+  glad_glXQueryCurrentRendererIntegerMESA;
+#define glXQueryCurrentRendererIntegerMESA                                    \
+  glad_glXQueryCurrentRendererIntegerMESA
+GLAD_API_CALL PFNGLXQUERYCURRENTRENDERERSTRINGMESAPROC
+  glad_glXQueryCurrentRendererStringMESA;
+#define glXQueryCurrentRendererStringMESA                                     \
+  glad_glXQueryCurrentRendererStringMESA
 GLAD_API_CALL PFNGLXQUERYDRAWABLEPROC glad_glXQueryDrawable;
 #define glXQueryDrawable glad_glXQueryDrawable
 GLAD_API_CALL PFNGLXQUERYEXTENSIONPROC glad_glXQueryExtension;
@@ -1067,21 +1269,28 @@ GLAD_API_CALL PFNGLXQUERYFRAMECOUNTNVPROC glad_glXQueryFrameCountNV;
 #define glXQueryFrameCountNV glad_glXQueryFrameCountNV
 GLAD_API_CALL PFNGLXQUERYGLXPBUFFERSGIXPROC glad_glXQueryGLXPbufferSGIX;
 #define glXQueryGLXPbufferSGIX glad_glXQueryGLXPbufferSGIX
-GLAD_API_CALL PFNGLXQUERYHYPERPIPEATTRIBSGIXPROC glad_glXQueryHyperpipeAttribSGIX;
+GLAD_API_CALL PFNGLXQUERYHYPERPIPEATTRIBSGIXPROC
+  glad_glXQueryHyperpipeAttribSGIX;
 #define glXQueryHyperpipeAttribSGIX glad_glXQueryHyperpipeAttribSGIX
-GLAD_API_CALL PFNGLXQUERYHYPERPIPEBESTATTRIBSGIXPROC glad_glXQueryHyperpipeBestAttribSGIX;
+GLAD_API_CALL PFNGLXQUERYHYPERPIPEBESTATTRIBSGIXPROC
+  glad_glXQueryHyperpipeBestAttribSGIX;
 #define glXQueryHyperpipeBestAttribSGIX glad_glXQueryHyperpipeBestAttribSGIX
-GLAD_API_CALL PFNGLXQUERYHYPERPIPECONFIGSGIXPROC glad_glXQueryHyperpipeConfigSGIX;
+GLAD_API_CALL PFNGLXQUERYHYPERPIPECONFIGSGIXPROC
+  glad_glXQueryHyperpipeConfigSGIX;
 #define glXQueryHyperpipeConfigSGIX glad_glXQueryHyperpipeConfigSGIX
-GLAD_API_CALL PFNGLXQUERYHYPERPIPENETWORKSGIXPROC glad_glXQueryHyperpipeNetworkSGIX;
+GLAD_API_CALL PFNGLXQUERYHYPERPIPENETWORKSGIXPROC
+  glad_glXQueryHyperpipeNetworkSGIX;
 #define glXQueryHyperpipeNetworkSGIX glad_glXQueryHyperpipeNetworkSGIX
-GLAD_API_CALL PFNGLXQUERYMAXSWAPBARRIERSSGIXPROC glad_glXQueryMaxSwapBarriersSGIX;
+GLAD_API_CALL PFNGLXQUERYMAXSWAPBARRIERSSGIXPROC
+  glad_glXQueryMaxSwapBarriersSGIX;
 #define glXQueryMaxSwapBarriersSGIX glad_glXQueryMaxSwapBarriersSGIX
 GLAD_API_CALL PFNGLXQUERYMAXSWAPGROUPSNVPROC glad_glXQueryMaxSwapGroupsNV;
 #define glXQueryMaxSwapGroupsNV glad_glXQueryMaxSwapGroupsNV
-GLAD_API_CALL PFNGLXQUERYRENDERERINTEGERMESAPROC glad_glXQueryRendererIntegerMESA;
+GLAD_API_CALL PFNGLXQUERYRENDERERINTEGERMESAPROC
+  glad_glXQueryRendererIntegerMESA;
 #define glXQueryRendererIntegerMESA glad_glXQueryRendererIntegerMESA
-GLAD_API_CALL PFNGLXQUERYRENDERERSTRINGMESAPROC glad_glXQueryRendererStringMESA;
+GLAD_API_CALL PFNGLXQUERYRENDERERSTRINGMESAPROC
+  glad_glXQueryRendererStringMESA;
 #define glXQueryRendererStringMESA glad_glXQueryRendererStringMESA
 GLAD_API_CALL PFNGLXQUERYSERVERSTRINGPROC glad_glXQueryServerString;
 #define glXQueryServerString glad_glXQueryServerString
@@ -1089,13 +1298,15 @@ GLAD_API_CALL PFNGLXQUERYSWAPGROUPNVPROC glad_glXQuerySwapGroupNV;
 #define glXQuerySwapGroupNV glad_glXQuerySwapGroupNV
 GLAD_API_CALL PFNGLXQUERYVERSIONPROC glad_glXQueryVersion;
 #define glXQueryVersion glad_glXQueryVersion
-GLAD_API_CALL PFNGLXQUERYVIDEOCAPTUREDEVICENVPROC glad_glXQueryVideoCaptureDeviceNV;
+GLAD_API_CALL PFNGLXQUERYVIDEOCAPTUREDEVICENVPROC
+  glad_glXQueryVideoCaptureDeviceNV;
 #define glXQueryVideoCaptureDeviceNV glad_glXQueryVideoCaptureDeviceNV
 GLAD_API_CALL PFNGLXRELEASEBUFFERSMESAPROC glad_glXReleaseBuffersMESA;
 #define glXReleaseBuffersMESA glad_glXReleaseBuffersMESA
 GLAD_API_CALL PFNGLXRELEASETEXIMAGEEXTPROC glad_glXReleaseTexImageEXT;
 #define glXReleaseTexImageEXT glad_glXReleaseTexImageEXT
-GLAD_API_CALL PFNGLXRELEASEVIDEOCAPTUREDEVICENVPROC glad_glXReleaseVideoCaptureDeviceNV;
+GLAD_API_CALL PFNGLXRELEASEVIDEOCAPTUREDEVICENVPROC
+  glad_glXReleaseVideoCaptureDeviceNV;
 #define glXReleaseVideoCaptureDeviceNV glad_glXReleaseVideoCaptureDeviceNV
 GLAD_API_CALL PFNGLXRELEASEVIDEODEVICENVPROC glad_glXReleaseVideoDeviceNV;
 #define glXReleaseVideoDeviceNV glad_glXReleaseVideoDeviceNV
@@ -1134,18 +1345,19 @@ GLAD_API_CALL PFNGLXWAITVIDEOSYNCSGIPROC glad_glXWaitVideoSyncSGI;
 GLAD_API_CALL PFNGLXWAITXPROC glad_glXWaitX;
 #define glXWaitX glad_glXWaitX
 
-
-
-
-
-GLAD_API_CALL int gladLoadGLXUserPtr(Display *display, int screen, GLADuserptrloadfunc load, void *userptr);
-GLAD_API_CALL int gladLoadGLX(Display *display, int screen, GLADloadfunc load);
+GLAD_API_CALL int
+gladLoadGLXUserPtr (Display* display, int screen, GLADuserptrloadfunc load,
+                    void* userptr);
+GLAD_API_CALL int
+gladLoadGLX (Display* display, int screen, GLADloadfunc load);
 
 #ifdef GLAD_GLX
 
-GLAD_API_CALL int gladLoaderLoadGLX(Display *display, int screen);
+GLAD_API_CALL int
+gladLoaderLoadGLX (Display* display, int screen);
 
-GLAD_API_CALL void gladLoaderUnloadGLX(void);
+GLAD_API_CALL void
+gladLoaderUnloadGLX (void);
 
 #endif
 #ifdef __cplusplus
