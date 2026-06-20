@@ -93,7 +93,6 @@ extern "C" {
 #define GLEXT_UNUSED(x) (void)(x)
 
 #ifndef GLEXT_API_CALL
-#if defined(GLEXT_API_CALL_EXPORT)
 #if GLEXT_PLATFORM_WIN32 || defined(__CYGWIN__)
 #if defined(GLEXT_API_CALL_EXPORT_BUILD)
 #if defined(__GNUC__)
@@ -115,7 +114,6 @@ extern "C" {
 #endif
 #else
 #define GLEXT_API_CALL extern
-#endif
 #endif
 
 #ifdef APIENTRY
