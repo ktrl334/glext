@@ -3,6 +3,7 @@
 This repository includes the following specifications:
 
 - gl 4.6 (core profile)
+- vulkan 1.4
 - egl 1.5
 - glx 1.4
 - wgl 1.0

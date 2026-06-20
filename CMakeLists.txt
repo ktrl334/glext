@@ -7,30 +7,37 @@ set(CMAKE_C_EXTENSIONS false)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(GLEXT_SOURCE source/gl.c source/egl.c)
 set(GLEXT_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_library(static_glext STATIC ${GLEXT_SOURCE})
-target_include_directories(static_glext PRIVATE ${GLEXT_INCLUDE})
-
-add_library(glext SHARED ${GLEXT_SOURCE})
-target_include_directories(glext PRIVATE ${GLEXT_INCLUDE})
-
-find_package(X11 QUIET)
+set(GLEXT_CORE
+  source/gl.c
+  source/egl.c
+  source/vulkan.c
+)
+find_package(X11 REQUIRED)
 if(X11_FOUND)
-  list(APPEND GLEXT_SOURCE source/glx.c)
-  set_target_properties(static_glext PROPERTIES POSITION_INDEPENDENT_CODE ON)
-  target_link_libraries(static_glext PUBLIC X11 GL)
+  set(GLEXT_PLATFORM source/glx.c)
 elseif(WIN32)
-  list(APPEND GLEXT_SOURCE source/wgl.c)
-  target_link_libraries(static_glext PUBLIC opengl32)
+  set(GLEXT_PLATFORM source/wgl.c)
 else()
-  message(FATAL_ERROR)
+  message(WARNING "GLX or WIN32 will not be compiled.")
 endif()
 
-target_compile_definitions(glext PRIVATE GLEXT_API_CALL_EXPORT_BUILD PUBLIC GLEXT_API_CALL_EXPORT)
-target_compile_definitions(static_glext PRIVATE GLEXT_API_CALL_EXPORT_BUILD PUBLIC GLEXT_API_CALL_EXPORT)
+set(GLEXT_SOURCES ${GLEXT_CORE} ${GLEXT_PLATFORM})
+
+add_library(glext_obj OBJECT ${GLEXT_SOURCES})
+target_include_directories(glext_obj PUBLIC ${GLEXT_INCLUDE})
+
+add_library(static_glext STATIC)
+target_link_libraries(static_glext PRIVATE glext_obj)
+
+add_library(glext SHARED)
+target_link_libraries(glext PRIVATE glext_obj)
 
 add_executable(glfw_window_test tests/window.c)
 target_include_directories(glfw_window_test PRIVATE ${GLEXT_INCLUDE})
-target_link_libraries(glfw_window_test PRIVATE glext glfw3)
+target_link_libraries(glfw_window_test PRIVATE glext glfw)
+
+add_executable(vulkan_test tests/vulkan_test.c)
+target_include_directories(vulkan_test PRIVATE ${GLEXT_INCLUDE})
+target_link_libraries(vulkan_test PRIVATE glext)
